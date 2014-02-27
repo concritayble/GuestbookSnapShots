@@ -2,7 +2,7 @@
 
 # write a text file
 f = open("TestConfig.txt", "r+")
-f = open('/users/cosmigitana/Desktop/TestConfig.txt','r+')
+f = open('/path/TestConfig.txt','r+')
 
 firstread = f.readlines()   
  # Take a snapshot of initial file
