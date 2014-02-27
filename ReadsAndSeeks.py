@@ -1,7 +1,7 @@
 #!/usr/bin/python
 
 # Open a file
-fo = open('/users/cosmigitana/Desktop/foo.txt','rw+')
+fo = open('/path/foo.txt','rw+')
 print ("Name of the file: ", fo.name)
 
 line = fo.readline()
