@@ -63,7 +63,7 @@ class myWindow:
 #           print("last entries: ", entry)
             
        	    text_file = open("TestConfig.txt", "a")
-       	    text_file = open('/Users/cosmigitana/Desktop/TestConfig.txt','a')
+       	    text_file = open('/path/TestConfig.txt','a')
  #      	    
 	    text_file.write(str(entry[-1]))
             text_file.write("\n")
