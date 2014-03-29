@@ -1,0 +1,78 @@
+#!/usr/bin/python
+#written for the existence or non existence of such information, March 2014
+#with thanks to the wizardry of Tom Jennings, Ben Dean and Clay Chaplin.
+
+import os, re
+import sys
+import smtplib
+import subprocess
+
+from email.mime.image import MIMEImage
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+
+
+#mails = open('/home/pi/emails.txt','r+')
+
+#mailList = [i.strip() for i in mails.readlines()] 
+directory = "/home/pi/"
+
+SMTP_SERVER = 'smtp.gmail.com'
+SMTP_PORT = 587
+
+sender = ‘someAddress@whatever.com'
+password = "someAddressPassword”
+
+#recipient_list = open('/home/pi/emails.txt','r+w+')
+#all_emails = [line.strip() for line in recipient_list.readlines()]
+#recipient_list.close()
+
+recipient = subprocess.check_output(['tail', '-2','emails.txt'])
+#rest_of_emails = all_emails[1:]
+
+print(recipient)
+subject = 'hey'
+message = 'Glad you could be here.'
+
+
+def main():
+    msg = MIMEMultipart()
+    msg['Subject'] = 'hey'
+    msg['To'] = recipient
+    msg['From'] = sender
+
+    files = os.listdir(directory)
+    pngsearch = re.compile(".jpg", re.IGNORECASE)
+    files = filter(pngsearch.search, files)
+
+for filename in files:
+        path = os.path.join(directory, filename)
+        if not os.path.isfile(path):
+            continue
+
+        img = MIMEImage(open(path, 'rb').read(), _subtype="jpg")
+        img.add_header('Content-Disposition', 'attachment', filename=filename)
+        msg.attach(img)
+
+    part = MIMEText('text', "plain")
+    part.set_payload(message)
+    msg.attach(part)
+
+    session = smtplib.SMTP(SMTP_SERVER, SMTP_PORT)
+
+    session.ehlo()
+    session.starttls()
+    session.ehlo()
+    session.login(sender, password)
+
+    session.sendmail(sender, recipient, msg.as_string())
+    session.quit()
+
+
+ ##Assuming sending the email went ok, then: I think this is what we commented out in the versi$
+#recipient_list = open('emails.txt', 'w')
+#recipient_list.writelines(rest_of_emails)
+#recipient_list.close()
+
+if __name__ == '__main__':
+    main()
